@@ -27,14 +27,18 @@ public class UserService {
     }
 
     public User crearUsuario(User usuario) {
+        if (usuario.getRol() == null) {
+            throw new IllegalArgumentException("El rol no puede ser nulo");
+        }
         return repository.save(usuario);
     }
-
     public User actualizarUsuario(String cedula, User usuario) {
+        if (usuario.getRol() == null) {
+            throw new IllegalArgumentException("El rol no puede ser nulo");
+        }
         usuario.setCedula(cedula);
         return repository.save(usuario);
     }
-
     public void eliminarUsuario(String cedula) {
         repository.deleteById(cedula);
     }

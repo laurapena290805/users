@@ -17,9 +17,9 @@ public class User {
     private String correo;
     private String direccion;
     private String ciudad;
-    private String codigoPostal;
     private String pais;
     private String telefono;
-    private String rol;
-    private String contraseña;
+    @Enumerated(EnumType.STRING)
+    private Role rol;
+    private String contrasena;
 }
