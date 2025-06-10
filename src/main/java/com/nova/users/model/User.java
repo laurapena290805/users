@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
-
     @Id
     private String cedula;
     private String nombre;
@@ -19,6 +18,7 @@ public class User {
     private String ciudad;
     private String pais;
     private String telefono;
+
     @Enumerated(EnumType.STRING)
     private Role rol;
     private String contrasena;

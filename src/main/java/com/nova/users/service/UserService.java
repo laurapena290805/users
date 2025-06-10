@@ -4,10 +4,15 @@ package com.nova.users.service;
 import com.nova.users.model.User;
 import com.nova.users.repository.UserRepository;
 import com.nova.users.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.nova.users.model.Role;
 
 import java.util.List;
 import java.util.Optional;
+import com.nova.users.model.User;
+
 
 @Service
 public class UserService {
@@ -41,5 +46,13 @@ public class UserService {
     }
     public void eliminarUsuario(String cedula) {
         repository.deleteById(cedula);
+    }
+
+    public Page<User> listarUsuariosPaginados(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    public Page<User> listarPorRol(Role rol, Pageable pageable) {
+        return repository.findByRol(rol, pageable);
     }
 }
