@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-users
+  labels:
+    app: microservice-users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice-users
+  template:
+    metadata:
+      labels:
+        app: microservice-users
+    spec:
+      containers:
+        - name: microservice-users
+          image: laurapena290805/imagenes:microservice-users
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SERVER_PORT
+              value: "8081"
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: password
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: credentials
+                  key: url
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
