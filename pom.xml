@@ -73,6 +73,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.30</version> <!-- o la última disponible -->
@@ -107,7 +112,10 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+
 	</dependencies>
+
+
 
 	<build>
 		<plugins>
@@ -137,5 +145,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
