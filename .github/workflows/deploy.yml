@@ -3,11 +3,11 @@ name: Deploy Spring Boot Microservice
 on:
   push:
     branches:
-      - main
+      - master
       - develop
 
 env:
-  IMAGE_NAME: laurapena290805/imagenes:microservice-users
+  IMAGE_NAME: juanjoher/imagenes:microservice-users
   REGISTRY: docker.io
 
 jobs:
