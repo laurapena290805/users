@@ -7,7 +7,7 @@ on:
       - develop
 
 env:
-  IMAGE_NAME: laurapena290805/imagenes:microservice-users
+  IMAGE_NAME: juanjoher/imagenes:microservice-users
   REGISTRY: docker.io
 
 jobs:
