@@ -2,7 +2,6 @@ package com.nova.users.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nova.users.config.JwtService;
-import com.nova.users.config.SecurityConfig;
 import com.nova.users.dto.AuthenticationRequest;
 import com.nova.users.dto.RegisterRequest;
 import com.nova.users.model.Role;
@@ -11,11 +10,12 @@ import com.nova.users.repository.UserRepository;
 import com.nova.users.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,12 +28,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = AuthenticationController.class)
-@Import(SecurityConfig.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class AuthenticationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private UserRepository userRepository;
@@ -50,22 +53,12 @@ public class AuthenticationControllerTest {
     @MockBean
     private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Test
     void register_shouldReturnToken() throws Exception {
-        RegisterRequest request = new RegisterRequest();
-        request.setCorreo("test@test.com");
-        request.setContrasena("password");
-
-        User user = new User();
-        user.setCorreo("test@test.com");
-        user.setRol(Role.CLIENTE);
+        RegisterRequest request = new RegisterRequest("12345", "Test", "User", "test@test.com", "password");
 
         when(userRepository.findByCorreo(any())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
-        when(userRepository.save(any())).thenReturn(user);
         when(jwtService.generateToken(any(User.class))).thenReturn("fake-token");
 
         mockMvc.perform(post("/auth/register")
@@ -79,14 +72,13 @@ public class AuthenticationControllerTest {
     @Test
     void login_shouldReturnToken() throws Exception {
         AuthenticationRequest request = new AuthenticationRequest("test@test.com", "password");
-
         User user = new User();
         user.setCorreo("test@test.com");
         user.setContrasena("encodedPassword");
         user.setRol(Role.CLIENTE);
 
-        when(userDetailsService.loadUserByUsername(any())).thenReturn(user);
-        when(jwtService.generateToken(any(User.class))).thenReturn("fake-token");
+        when(userDetailsService.loadUserByUsername("test@test.com")).thenReturn(user);
+        when(jwtService.generateToken(any(UserDetails.class))).thenReturn("fake-token");
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
